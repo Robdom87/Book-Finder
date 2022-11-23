@@ -17,5 +17,14 @@ export const QUERY_SINGLE_USER = gql`
       username
       savedBooks
     }
+  }`;
+
+  export const QUERY_ME = gql`
+  query me {
+    me {
+      _id
+      name
+      skills
+    }
   }
 `;
