@@ -1,25 +1,50 @@
 const { User } = require('../models');
+const { AuthenticationError } = require('apollo-server-express');
+const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    profiles: async () => {
-      return Profile.find();
+    users: async () => {
+      return User.find();
     },
 
-    profile: async (parent, { profileId }) => {
-      return Profile.findOne({ _id: profileId });
+    user: async (parent, { userId }) => {
+      return User.findOne({ _id: userId }).populate('savedBooks').populate({
+        path: 'savedBooks',
+        populate: 'Book'
+      });
     },
   },
 
   Mutation: {
-    addProfile: async (parent, { name }) => {
-      return Profile.create({ name });
+    createUser: async (parent, { name, email, password }) => {
+      const user = await User.create({ name, email, password });
+      const token = signToken(user);
+
+      return { token, user };
     },
-    addSkill: async (parent, { profileId, skill }) => {
-      return Profile.findOneAndUpdate(
-        { _id: profileId },
+    login: async (parent, { email, password }) => {
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        throw new AuthenticationError('No user with this email found!');
+      }
+
+      const correctPw = await user.isCorrectPassword(password);
+
+      if (!correctPw) {
+        throw new AuthenticationError('Incorrect password!');
+      }
+
+      const token = signToken(user);
+      return { token, user };
+    },
+
+    saveBook: async (parent, { userId, savedBook }) => {
+      return User.findOneAndUpdate(
+        { _id: userId },
         {
-          $addToSet: { skills: skill },
+          $addToSet: { savedBooks: savedBook },
         },
         {
           new: true,
@@ -27,13 +52,10 @@ const resolvers = {
         }
       );
     },
-    removeProfile: async (parent, { profileId }) => {
-      return Profile.findOneAndDelete({ _id: profileId });
-    },
-    removeSkill: async (parent, { profileId, skill }) => {
-      return Profile.findOneAndUpdate(
-        { _id: profileId },
-        { $pull: { skills: skill } },
+    removeBook: async (parent, { userId, savedBook }) => {
+      return User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { savedBooks: savedBook } },
         { new: true }
       );
     },
