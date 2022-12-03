@@ -47,11 +47,11 @@ const resolvers = {
       return { token, user };
     },
 
-    saveBook: async (parent, { userId, savedBook }) => {
+    saveBook: async (parent, { userId, input }) => {
       return User.findOneAndUpdate(
         { _id: userId },
         {
-          $addToSet: { savedBooks: savedBook },
+          $addToSet: { savedBooks: input },
         },
         {
           new: true,
