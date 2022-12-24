@@ -12,8 +12,6 @@ Book-Finder is a web app where users can search for books and their respective i
 
 ## Installation
 
-Book-Finder does not require installation.
-
 Technologies Used
 - React
 - Javascript
@@ -26,9 +24,11 @@ Technologies Used
 
 ## Usage
 
-![Need Image](assets/)
+![Search](assets/search.png)
+![Save](assets/save.png)
+![Saved](assets/saved.png)
 
-[Need Link](https://example.com)
+Book-Finder is not deployed, so will require downloading/cloning.
 
 ## License
 
