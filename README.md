@@ -24,9 +24,9 @@ Technologies Used
 
 ## Usage
 
-![Search](assets/search.png)
-![Save](assets/save.png)
-![Saved](assets/saved.png)
+![Search](assets/search.gif)
+![Save](assets/save.gif)
+![Saved](assets/saved.gif)
 
 Book-Finder is not deployed, so will require downloading/cloning.
 
